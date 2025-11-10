@@ -51,6 +51,13 @@ Links de verificación:
 
 1. Conectar tu wallet (Metamask) a la testnet donde desplegaste los contratos.
 2. Asegurarte de que tienes tokens mock (USDC y WETH) y aprobar el router si vas a depositar tokens distintos a USDC:
+3. Depositar tokens:
+4. Retirar tokens:
+5. Consultar saldo:
 
 ```solidity
 IERC20(WETH).approve(MockUniswapV2RouterAddress, amount);
+depositToken(WETH, 100); // Se hace swap a USDC automáticamente y se actualiza tu balance
+withdrawToken(USDC, 50); // Retira USDC hasta el límite permitido
+getBalance(userAddress, USDC);
+
