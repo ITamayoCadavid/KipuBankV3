@@ -54,6 +54,40 @@ https://testnet.routescan.io/address/0x98bB535322B28d6462163b78cc17ac3b1a15fcf7/
 2. Asegurarte de que tienes tokens mock (USDC y WETH) y aprobar el router si vas a depositar tokens distintos a USDC:
    ```solidity
    IERC20(WETH).approve(MockUniswapV2Router, amount);
+## Instrucciones de Uso / Pruebas Simuladas
+
+1. Conectar tu wallet (Metamask) a la testnet donde desplegaste los contratos.
+2. Asegurarte de que tienes tokens mock (USDC y WETH) y aprobar el router si vas a depositar tokens distintos a USDC:
+
+```solidity
+IERC20(WETH).approve(MockUniswapV2RouterAddress, amount);
+3. Depositar Tokens
+depositToken(WETH, 100); // Se hace swap a USDC automáticamente y se actualiza tu balance
+4.Retirar Tokens
+withdrawToken(USDC, 50); // Retira USDC hasta el límite permitido
+5. Consultar saldo
+getBalance(userAddress, USDC);
+
+
+Consideraciones de Diseño
+
+Uso de Ownable para control de administración del contrato.
+
+Límite global del banco (bankCap) respetado al hacer swaps y depósitos.
+
+Uso de MockUniswapV2RouterSimple para simular swaps sin depender de mainnet/testnet real.
+
+Separación de balances de ETH y USDC para mayor claridad.
+
+Prevención de reentradas mediante ReentrancyGuard.
+
+Control de límites de retiro por transacción (withdrawLimit) para mayor seguridad.
+
+Notas
+
+Los swaps a USDC se realizan solo si se deposita un token distinto a USDC.
+
+Todos los depósitos y retiros actualizan correctamente los balances y no exceden los límites definidos.
 
 
 
