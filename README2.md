@@ -37,7 +37,7 @@ Se integra con un MockUniswapV2Router para simular swaps WETH → USDC en testne
 | `MockUniswapV2Router` | `0xc470c41a251523278c849cc36a40afe47ddc09c9` | Simula swaps ETH → USDC      |
 | `KipuBankV3`          | `0x98bb535322b28d6462163b78cc17ac3b1a15fcf7` | Contrato principal del banco |
 
-##Verificacion
+
 Links de verificación:
 
 - [Sourcify](https://repo.sourcify.dev/11155111/0x98bB535322B28d6462163b78cc17ac3b1a15fcf7/)
