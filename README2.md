@@ -59,21 +59,6 @@ Links de verificación:
 - `getBalance(address user, address token)` → Retorna el balance del usuario en la moneda especificada.
 
 ---
-
-## Instrucciones de Uso / Pruebas Simuladas
-
-1. Conectar tu wallet (Metamask) a la testnet donde desplegaste los contratos.
-2. Asegurarte de que tienes tokens mock (USDC y WETH) y aprobar el router si vas a depositar tokens distintos a USDC:
-3. Depositar tokens:
-4. Retirar tokens:
-5. Consultar saldo:
-
-```solidity
-IERC20(WETH).approve(MockUniswapV2RouterAddress, amount);
-depositToken(WETH, 100); // Se hace swap a USDC automáticamente y se actualiza tu balance
-withdrawToken(USDC, 50); // Retira USDC hasta el límite permitido
-getBalance(userAddress, USDC);
-
 Ejemplo de Constructor del Contrato KipuBankV3
 
 Al desplegar KipuBankV3, pega las direcciones de los mocks en el orden correcto:
@@ -118,4 +103,24 @@ Se usa un MockUniswapV2Router para pruebas seguras en testnet, sin depender del 
 Los límites (bankCap y withdrawLimit) fueron añadidos para proteger la liquidez del contrato.
 
 Se priorizó la claridad del código y seguridad sobre la optimización de gas, dado el propósito educativo.
+
+
+
+
+
+---
+
+## Instrucciones de Uso / Pruebas Simuladas
+
+1. Conectar tu wallet (Metamask) a la testnet donde desplegaste los contratos.
+2. Asegurarte de que tienes tokens mock (USDC y WETH) y aprobar el router si vas a depositar tokens distintos a USDC:
+3. Depositar tokens:
+4. Retirar tokens:
+5. Consultar saldo:
+
+```solidity
+IERC20(WETH).approve(MockUniswapV2RouterAddress, amount);
+depositToken(WETH, 100); // Se hace swap a USDC automáticamente y se actualiza tu balance
+withdrawToken(USDC, 50); // Retira USDC hasta el límite permitido
+getBalance(userAddress, USDC);
 
