@@ -1,5 +1,3 @@
-
-# 🏦 KipuBankV3
 # 🏦 KipuBankV3
 
 ## Descripción General
@@ -96,7 +94,7 @@ _USDC = dirección del MockUSDC
 * **Dirección desplegada:**
   `0x98bb535322b28d6462163b78cc17ac3b1a15fcf7`
 
-✅ Verificado en **Sourcify** y **Routescan**.
+Verificado en **Sourcify** y **Routescan**.
 
 ---
 
@@ -113,7 +111,7 @@ _USDC = dirección del MockUSDC
 
 ## Instrucciones de Uso / Pruebas Simuladas
 
-1. Conecta tu **wallet (Metamask)** a la testnet (por ejemplo, **Sepolia**).
+1. Conecta tu **wallet (Metamask)** a la testnet ( **Sepolia**).
 2. Asegúrate de tener tokens mock (USDC y WETH).
 3. Aprueba el router antes de depositar tokens distintos a USDC:
 
@@ -175,14 +173,14 @@ getBalance(userAddress, USDC);
 
 ---
 
-## ✅ Verificación
+## Verificación
 
 * [Sourcify](https://repo.sourcify.dev/11155111/0x98bB535322B28d6462163b78cc17ac3b1a15fcf7)
 * [Routescan](https://testnet.routescan.io/address/0x98bB535322B28d6462163b78cc17ac3b1a15fcf7/contract/11155111/code)
 
 ---
 
-## 🧭 Licencia
+## Licencia
 
 Este proyecto es de carácter educativo y se publica bajo la licencia **MIT**.
 
