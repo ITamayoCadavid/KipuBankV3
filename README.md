@@ -34,15 +34,6 @@ Integra soporte multi-token, control de límites, conversión automática a USDC
 | `router` | Dirección del contrato MockUniswapV2Router. |
 | `WETH` / `USDC` | Direcciones de los tokens mock. |
 
-## Contratos Desplegados
-
----
-| Contrato              | Dirección                                    | Descripción                  |
-| --------------------- | -------------------------------------------- | ---------------------------- |
-| `MockUSDC`            | `0x918cee9bfd71d73358516cef3e3610640dc40eb5` | Mock ERC20 de USDC           |
-| `MockWETH`            | `0xf9168336a59413893e03eb6732f9da9ee4298dc5` | Mock ERC20 de WETH           |
-| `MockUniswapV2Router` | `0xc470c41a251523278c849cc36a40afe47ddc09c9` | Simula swaps ETH → USDC      |
-| `KipuBankV3`          | `0x98bb535322b28d6462163b78cc17ac3b1a15fcf7` | Contrato principal del banco |
 
 ---
 
@@ -172,7 +163,7 @@ getBalance(userAddress, USDC);
 
 ---
 
-## 🧾 Contratos Desplegados
+## Contratos Desplegados
 
 | Contrato            | Dirección                                  | Nota               |
 | ------------------- | ------------------------------------------ | ------------------ |
