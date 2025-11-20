@@ -118,6 +118,23 @@ Y emitirlo dentro de `swapTokenToUSDC`.
 
 ---
 
+# **Conclusión sobre la Cobertura** 
+
+Actualmente, el contrato principal KipuBankV3.sol tiene 0% de cobertura, ya que no existen pruebas unitarias que validen su comportamiento.
+
+Esto confirma la necesidad de:
+
+Crear pruebas unitarias para todas las funciones principales.
+
+Aumentar la cobertura para mejorar la confiabilidad del contrato.
+
+Verificar rutas críticas como depósitos, retiros, swaps y seguridad.
+
+Sin pruebas, el proyecto no puede considerarse seguro.
+Por ello, el siguiente paso es escribir tests para aumentar la cobertura y validar el funcionamiento del sistema.
+
+<img width="1007" height="435" alt="image" src="https://github.com/user-attachments/assets/5f1a88ae-6afe-4c7b-be0b-25e3d4423808" />
+
 # **Conclusión General**
 
 Aunque el contrato cumple bien su función básica, todavía presenta riesgos importantes relacionados con:
