@@ -194,7 +194,21 @@ function invariant_total_eth_matches_user_sum() public view {
 
 ---
 
-## 7) Recomendaciones
+## 7) Próximos pasos necesarios para alcanzar la madurez del protocolo y completar la preparación para una auditoría
+
+*Crear una buena suite de tests unitarios que cubra al menos las partes más importantes del contrato (≥80% de la ruta crítica).
+
+*Configurar tests automáticos de invariantes usando Foundry o Echidna para asegurarnos de que las reglas siempre se cumplan.
+
+*Implementar control de slippage y usar oráculos o parámetros para definir amountOutMin en los swaps.
+
+*Añadir mecanismos de pausa y procedimientos de emergencia, y documentar cómo usarlos.
+
+*Usar SafeERC20 y reconciliar balances.
+
+*Hacer revisión manual y pruebas en testnet, tanto con un router simulado como con Uniswap V2 real en testnet, para asegurarnos de que todo funciona como se espera.
+
+##  Recomendaciones
 
 **A) Protección en swaps**
 
@@ -236,21 +250,6 @@ function swapTokenToUSDC(address token, uint256 amount, uint256 minAmountOut) in
 5. Invariant tests: sum(user balances) == totals.
 6. Fuzz tests en deposit/withdraw (Foundry fuzz).
 
----
-
-## 8) Próximos pasos necesarios para alcanzar la madurez del protocolo y completar la preparación para una auditoría
-
-*Crear una buena suite de tests unitarios que cubra al menos las partes más importantes del contrato (≥80% de la ruta crítica).
-
-*Configurar tests automáticos de invariantes usando Foundry o Echidna para asegurarnos de que las reglas siempre se cumplan.
-
-*Implementar control de slippage y usar oráculos o parámetros para definir amountOutMin en los swaps.
-
-*Añadir mecanismos de pausa y procedimientos de emergencia, y documentar cómo usarlos.
-
-*Usar SafeERC20 y reconciliar balances.
-
-*Hacer revisión manual y pruebas en testnet, tanto con un router simulado como con Uniswap V2 real en testnet, para asegurarnos de que todo funciona como se espera.
 
 ---
 
