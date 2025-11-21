@@ -413,28 +413,21 @@ Los contadores se incrementan/decrementan manualmente. Un revert parcial, ruta a
 
 ## 5) Invariantes
 
-* **Invariante 1 — Suma de balances == totales internos**
-  `sum_over_users(userETHBalances[user]) == totalETHDeposits` y análogo para USDC.
-  Garantiza contabilidad correcta.
-  Validación: tests de invariantes con Foundry / Echidna.
-
-```solidity
-function invariant_total_eth_matches_user_sum() public view {
-    uint256 sum = 0;
-    for each user in users: sum += bank.userETHBalances(user);
-    assertEq(sum, bank.totalETHDeposits());
-}
-```
+* **Invariante 1 — Suma de balances = totales internos**
+Todos los balances de los usuarios deben sumar exactamente los depósitos totales de ETH y USDC. Esto asegura que la contabilidad interna del contrato es correcta. Se puede validar con tests que sumen los balances de todos los usuarios y comparen con los totales.
 
 * **Invariante 2 — Totales ≤ bankCap**
-  `totalETHDeposits <= bankCap` y `totalUSDCDeposits <= bankCap`.
-  Evita over-capacity y respeta modelo económico.
+  Los depósitos totales nunca deben superar la capacidad máxima del banco (`bankCap`). Esto evita errores económicos o sobrecapacidad.
 
-* **Invariante 3 — No existen balances negativos; cada retiro limitado por user balance**
-  `userETHBalances[user] >= 0` y `userUSDCBalances[user] >= 0`. Withdraw nunca permite `userBalance < 0`.
+* **Invariante 3 — No hay balances negativos**
+  Cada usuario nunca puede retirar más de lo que tiene en ETH o USDC. Esto garantiza que los balances individuales siempre sean ≥ 0.
 
-* **Invariante 4 — Tokens recibidos por swap ≧ amountOutMin**
-  `usdcReceived >= amountOutMin` en cada swap. Validación: mockear router y validar amounts[1] >= minOut.
+* **Invariante 4 — Tokens recibidos por swap ≥ cantidad mínima esperada**
+  Cada swap debe entregar al menos la cantidad mínima de USDC definida. Esto evita pérdidas por slippage excesivo y asegura que los usuarios reciban lo esperado.
+
+* **Validación general:**
+  Las invariantes se pueden comprobar mediante tests simples que verifiquen estas reglas, sin necesidad de escribir código avanzado de Foundry o mocks complejos.
+
 
 ---
 
