@@ -8,7 +8,7 @@ KipuBankV3 es un contrato de custodia y conversión que permite depositar ETH (`
 
 KipuBankV3 usa un router externo `IUniswapV2Router` para swaps y depende de la dirección USDC. Sin embargo, tiene protecciones mínimas: hereda `Ownable` y `ReentrancyGuard`, y emite eventos para depósitos y retiros (pero no para swaps ni cambios).  
 
-Este informe evalúa riesgos, define invariantes y propone correcciones y pruebas necesarias para preparar KipuBankV3 para una auditoría/mainnet.
+Este informe evalúa riesgos, define invariantes y propone correcciones y pruebas necesarias para preparar KipuBankV3 para una auditoría.
 
 ---
 
@@ -18,18 +18,18 @@ KipuBankV3 actualmente tiene baja madurez — el contrato compila pero no tiene 
 
 Los aspectos faltantes son:
 
-- Cobertura / pruebas: 0% para `KipuBankV3.sol` (ver sección Coverage). Por este motivo es urgente: unit tests para depósitos, retiros y swaps; invariantes automáticas; fuzzing.
+- Cobertura / pruebas: 0% para `KipuBankV3.sol`. Por este motivo es urgente: unit tests para depósitos, retiros y swaps; invariantes automáticas; fuzzing.
 - No hay operaciones de emergencia como por ejemplo `pausable`, `circuit breaker` ni mecanismos de recuperación.
 - No hay comprobación de tokens o validación de tokens `fee-on-transfer` ni retorno de `transfer`/`transferFrom`.
 - Control de permisos: `owner` existe (`Ownable`) pero no se detallan funciones administrativas que significarían menos riesgo; sin embargo `owner` podría seguir teniendo poderes indirectos (como por ejemplo la elección del router/USDC en constructor).
 
-**Conclusión:** KipuBankV3 no está listo para mainnet ni auditoría externa hasta cubrir pruebas, agregar mitigaciones y refinar los permisos.
+Por lo anterior KipuBankV3 no está listo para mainnet ni auditoría externa hasta cubrir pruebas, agregar mitigaciones y refinar los permisos.
 
 ---
 
 ## 3) Cobertura
 
-Comando ejecutado en Foundry (ejemplos válidos):
+Comando ejecutado en Foundry:
 
 ```bash
 cd <KipuBankV3>
@@ -55,10 +55,10 @@ La cobertura del contrato principal `KipuBankV3.sol` es 0%: no existen pruebas u
 La llamada al router usa `amountOutMin = 0`, `router.swapExactTokensForTokens(amount, 0, path, address(this), block.timestamp);` lo cual afecta esta función `swapTokenToUSDC(address token, uint256 amount)` y significa que acepta cualquier cantidad de USDC como salida.
 
 * **Criticidad:** CRÍTICA / ALTA
-* **Impacto:** El contrato puede ser vulnerable a ataques MEV o de tipo sandwich, así como a manipulación de precios. Esto podría hacer que el swap termine devolviendo casi 0 USDC, lo que causaría una pérdida directa de fondos para el usuario que deposita y, después, podría generar un riesgo serio de que se drenen más fondos del sistema.
+* **Impacto:** El contrato puede ser vulnerable a ataques MEV o de tipo sandwich, así como a manipulación de precios. Esto podría hacer que el swap termine devolviendo casi 0 USDC, lo que causaría una pérdida de fondos para el usuario que deposita y después, podría generar un riesgo serio de que se drenen más fondos del sistema.
 * **Solución propuesta:** No aceptar `amountOutMin = 0`. Calcular `amountOutMin` desde frontend o desde contrato con oráculo/TWAP, o aceptar `minAmountOut` como parámetro elegido por el usuario.
 
-**Ejemplo (parche mínimo, pasar `uint256 minAmountOut` desde depositToken):**
+**Ejemplo pasar `uint256 minAmountOut` desde depositToken:**
 
 ```solidity
 // cambiar interfaz depositToken para recibir minAmountOut
@@ -74,7 +74,7 @@ uint[] memory amounts = router.swapExactTokensForTokens(
 );
 ```
 
-Se puede validar usando un oráculo off-chain (o on-chain TWAP) para derivar `expectedOut` y aplicar un % de tolerancia (ej. 95% de `expectedOut`).
+Se puede usar un oráculo off-chain (o on-chain TWAP) y aplicar un % de tolerancia.
 
 ---
 
@@ -98,16 +98,16 @@ function pause() external onlyOwner { _pause(); }
 function unpause() external onlyOwner { _unpause(); }
 ```
 
-Opcional: añadir `emergencyWithdraw` (solo owner) con límite y eventos, y multi-sig para acciones críticas.
+Opcionalmente tambien se puede añadir `emergencyWithdraw` (solo owner) con límite y eventos, y multi-sig para acciones críticas.
 
 ---
 
-### Vulnerabilidad C — Aceptar tokens sin validación (tokens fee-on-transfer, rebase, etc.)
+### Vulnerabilidad C — Aceptar tokens sin validación (tokens fee-on-transfer, rebase)
 
 Las funciones `depositToken` y `swapTokenToUSDC` asumen que `transferFrom` y `transfer` siempre transfieren exactamente `amount`. No se revisa el valor de retorno ni se valida si el token aplica tarifas (`fee-on-transfer`). Tampoco se comprueba la cantidad real recibida, lo que podría causar inconsistencias.
 
-* **Criticidad:** ALTA / MEDIO (depende del token)
-* **Impacto:** Los balances internos pueden quedar desincronizados. El usuario podría pensar que depositó X, pero el contrato recibe X menos tarifa, haciendo que `userUSDCBalances` muestre más de lo que realmente tiene → insolvencia o pérdidas.
+* **Criticidad:** ALTA / MEDIO depende del token
+* **Impacto:** Los balances internos pueden quedar desincronizados. El usuario podría pensar que depositó X, pero el contrato recibe X menos tarifa, haciendo que `userUSDCBalances` muestre más de lo que realmente tiene lo cual podria llevar a insolvencia o pérdidas.
 * **Solución técnica propuesta:** Usar `SafeERC20` y comprobar retornos.
 
 ```solidity
@@ -159,8 +159,6 @@ Los contadores se incrementan/decrementan manualmente. Un revert parcial, ruta a
 
 ## 5) Invariantes
 
-**Qué es una invariante:** propiedad que siempre debe cumplirse, independientemente del orden de llamadas ni de ataques.
-
 * **Invariante 1 — Suma de balances == totales internos**
   `sum_over_users(userETHBalances[user]) == totalETHDeposits` y análogo para USDC.
   Garantiza contabilidad correcta.
@@ -186,7 +184,7 @@ function invariant_total_eth_matches_user_sum() public view {
 
 ---
 
-## 6) Cómo validar invariantes en Foundry (pasos concretos)
+## 6) Recomendaciones Cómo validar invariantes en Foundry
 
 * Implementar tests tipo property/invariant con `forge-std StdInvariant` o usar Echidna.
 * Ejemplo: crear `KipuBankInvariant.t.sol` que extienda `StdInvariant` y registre invariantes.
@@ -257,8 +255,4 @@ function swapTokenToUSDC(address token, uint256 amount, uint256 minAmountOut) in
 ---
 
 
-```
 
----
-
-```
