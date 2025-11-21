@@ -37,14 +37,11 @@ forge coverage
 forge test --coverage
 ````
 
-Resultado observado (ejemplo, obtenido en este repo):
+Resultado observado 
+<img width="1007" height="435" alt="Informe de Cobertura en Foundry" src="https://github.com/user-attachments/assets/a65b7803-6783-44af-9c5b-4d7dca02cfe0" />
 
-| Archivo            | Cobertura     |
-| ------------------ | ------------- |
-| src/Counter.sol    | 100.00% (4/4) |
-| src/KipuBankV3.sol | 0.00% (0/51)  |
 
-Total: 6.67%
+Total: 0%
 
 **Conclusión de coverage:**
 La cobertura del contrato principal `KipuBankV3.sol` es 0%: no existen pruebas unitarias que verifiquen su comportamiento. Por tanto, el proyecto requiere urgentemente la implementación de tests unitarios y de invariantes para validar depósitos, retiros, swaps y condiciones de borde antes de considerarlo maduro para auditoría o producción.
@@ -199,9 +196,9 @@ function invariant_total_eth_matches_user_sum() public view {
 
 ---
 
-## 7) Recomendaciones prácticas y parches
+## 7) Recomendaciones
 
-**A) Protección en swaps (parche mínimo)**
+**A) Protección en swaps**
 
 ```solidity
 function swapTokenToUSDC(address token, uint256 amount, uint256 minAmountOut) internal returns (uint256) {
@@ -232,7 +229,7 @@ function swapTokenToUSDC(address token, uint256 amount, uint256 minAmountOut) in
 * Emitir evento `SwapExecuted(...)` con `amountIn` y `amountOut`.
 * Emitir eventos administrativos (`router changed`, `owner changed`, `pause/unpause`).
 
-**E) Tests mínimos a implementar (prioridad)**
+**Tests a implementar**
 
 1. `depositETH` success y revert cuando supera `bankCap`.
 2. `depositToken(USDC)` success y balances correctos.
@@ -243,25 +240,25 @@ function swapTokenToUSDC(address token, uint256 amount, uint256 minAmountOut) in
 
 ---
 
-## 8) Checklist mínimo antes de pedir auditoría externa
+## 8) Próximos pasos necesarios para alcanzar la madurez del protocolo y completar la preparación para una auditoría
 
-* Suite de tests unitarios (≥80% ruta crítica)
-* Tests de invariantes automáticos (Foundry/Echidna)
-* Slippage control y oráculos/parametrización de `amountOutMin`
-* Pausable / Emergency procedures y documentación de flujo de emergencia
-* SafeERC20 + balance reconciliation (tokens con fees)
-* Documentación: README con comandos para reproducir tests y coverage, diagramas y supuestos (USDC address, router)
-* Revisión manual y pruebas de integración en testnet (con router mock y con Uniswap V2 en testnet)
+*Crear una buena suite de tests unitarios que cubra al menos las partes más importantes del contrato (≥80% de la ruta crítica).
+
+*Configurar tests automáticos de invariantes usando Foundry o Echidna para asegurarnos de que las reglas siempre se cumplan.
+
+*Implementar control de slippage y usar oráculos o parámetros para definir amountOutMin en los swaps.
+
+*Añadir mecanismos de pausa y procedimientos de emergencia, y documentar cómo usarlos.
+
+*Usar SafeERC20 y reconciliar balances.
+
+*Hacer revisión manual y pruebas en testnet, tanto con un router simulado como con Uniswap V2 real en testnet, para asegurarnos de que todo funciona como se espera.
 
 ---
 
-## 9) Conclusión y siguientes
 
 ```
 
 ---
 
-Si quieres, puedo hacer **una segunda versión aún más “limpia” visualmente**, con tablas, subtítulos y resaltado de código de manera que sea mucho más legible en GitHub/Notion, pero manteniendo **100% el contenido original**.  
-
-¿Quieres que haga eso también?
 ```
