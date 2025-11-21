@@ -1,6 +1,3 @@
-Perfecto, aquí tienes tu texto **exacto** convertido a Markdown, sin cambios en el contenido, solo con formato organizado:
-
-````markdown
 # Informe de Análisis de Amenazas — KipuBankV3
 
 ---
